@@ -1,0 +1,44 @@
+#!/usr/bin/env coffee
+###
+ * doran cli
+ *
+ *
+###
+doran = require("../lib")
+
+usage = """
+Doran - package manager for Vala
+
+Usage:
+  doran init project-name
+  doran get package-name
+  doran add file-name
+  doran remove file-name
+  doran build
+
+Options:
+  -d  [--debug]     # set debug flag, where available
+  -v  [--version]   # display version
+"""
+switch process.argv[2]
+
+  when 'init' then doran.init process.argv.slice(3)...
+  
+  when 'get' then doran.get process.argv.slice(3)...
+
+  when 'add' then doran.add process.argv.slice(3)...
+
+  when 'remove' then doran.remove process.argv.slice(3)...
+
+  when 'build' then doran.build process.argv.slice(3)...
+
+  when '--version' then console.log "doran v"+require('../package.json').version
+
+  when '-v' then console.log "doran v"+require('../package.json').version
+
+  when '--help' then console.log usage
+
+  when '-h' then console.log usage
+
+  else console.log usage
+

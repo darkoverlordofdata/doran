@@ -1,0 +1,19 @@
+{
+  "name": "doran",
+  "version": "0.0.1",
+  "description": "vala package manager",
+  "main": "index.js",
+  "bin": {
+    "doran": "./bin/doran"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "darkoverlordofdata",
+  "license": "MIT",
+  "dependencies": {
+    "coffeescript": "^2.0.1",
+    "fs-copy-file-sync": "^1.0.1",
+    "liquid.coffee": "^0.1.8"
+  }
+}
