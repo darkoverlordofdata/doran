@@ -32,6 +32,12 @@ vscode = [
   "settings.json",
   "tasks.json"
 ]
+
+render = (template, data) ->
+  src = __dirname.replace("\\lib", '')
+  xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
+  xform.render(data)
+  
 module.exports =
 #
 # Initialize a vala project
@@ -40,14 +46,14 @@ module.exports =
 # @return none
 #
   run: (projectName) ->
+    src = __dirname.replace("\\lib", '')
     # create folder at current location
     fs.mkdirSync path.join(process.cwd(), projectName)
 
     ## cmake folder
-    src = __dirname.replace("\\lib", '')
 
-    cmake1 = liquid.Template.parse(fs.readFileSync(path.join(src, 'CMakeLists.liquid'), 'utf8'))
-    cmake2 = liquid.Template.parse(fs.readFileSync(path.join(src, 'src/CMakeLists.liquid'), 'utf8'))
+    #cmake1 = liquid.Template.parse(fs.readFileSync(path.join(src, 'CMakeLists.liquid'), 'utf8'))
+    #cmake2 = liquid.Template.parse(fs.readFileSync(path.join(src, 'src/CMakeLists.liquid'), 'utf8'))
     project = {
       "name"    : projectName,
       "version" : "0.0.1",
@@ -61,10 +67,13 @@ module.exports =
         "glib-2.0",
         "gobject-2.0"
       ],
-      "options" : ["-g"]
+      "resources": [ ],
+      "options" : ["-g"],
+      "cc": "clang"
     }
 
-    fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), cmake1.render(project)
+    # fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), cmake1.render(project)
+    fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.liquid', project)
     fs.writeFileSync path.join(process.cwd(), projectName, "vala.json"), JSON.stringify(project, null, '  ')
     fs.copyFileSync path.join(src, 'license.md'), path.join(process.cwd(), projectName, 'license.md')
     fs.copyFileSync path.join(src, 'readme.md'), path.join(process.cwd(), projectName, 'readme.md')
@@ -89,7 +98,8 @@ module.exports =
 
     ## src folder
     fs.mkdirSync path.join(process.cwd(), projectName, 'src')
-    fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), cmake2.render(project)
+    # fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), cmake2.render(project)
+    fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), render('src/CMakeLists.liquid', project)
     fs.copyFileSync path.join(src, 'src', 'Config.vala.base'), path.join(process.cwd(), projectName, 'src', 'Config.vala.base')
     fs.writeFileSync path.join(process.cwd(), projectName, 'src', "#{projectName}.vala"), """
     public class #{projectName} {
