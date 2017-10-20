@@ -10,7 +10,8 @@ path = require('path')
 liquid = require('liquid.coffee')
 mkdirp = require('mkdirp')
 fs.copyFileSync = require('fs-copy-file-sync')
-cmake = [
+
+cmakeFiles = [
   'CMakeLists.txt',
   "FindVala.cmake",
   "FindValadoc.cmake",
@@ -27,63 +28,70 @@ cmake = [
   "ValaPrecompile.cmake",
   "ValaVersion.cmake"
 ]
-vscode = [
+vscodeFiles = [
   "launch.json",
   "settings.json",
   "tasks.json"
 ]
 
-render = (template, data) ->
-  src = __dirname.replace("\\lib", '')
-  xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
-  xform.render(data)
+ucfirst = (str) -> str.charAt(0).toUpperCase() + str.substr(1) 
+camel = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
   
 module.exports =
 #
 # Initialize a vala project
 #
 # @param  [String]  projectName
+# @param  [String]  projectTemplate
 # @return none
 #
-  run: (projectName) ->
-    src = __dirname.replace("\\lib", '')
-    # create folder at current location
-    fs.mkdirSync path.join(process.cwd(), projectName)
-
-    ## cmake folder
-
-    #cmake1 = liquid.Template.parse(fs.readFileSync(path.join(src, 'CMakeLists.liquid'), 'utf8'))
-    #cmake2 = liquid.Template.parse(fs.readFileSync(path.join(src, 'src/CMakeLists.liquid'), 'utf8'))
+  run: (projectName, projectTemplate = "default") ->
     project = {
-      "name"    : projectName,
-      "version" : "0.0.1",
-      "vala"    : "0.34",
-      "files"   : [
+      "name"      : projectName,
+      "template"  : projectTemplate,
+      "version"   : "0.0.1",
+      "vala"      : "0.34",
+      "files"     : [
         "src/#{projectName}.vala"
       ],
-      "packages": [
+      "packages"  : [
         "gee-0.8",
         "gio-2.0",
         "glib-2.0",
         "gobject-2.0"
       ],
-      "resources": [ ],
-      "options" : ["-g"],
-      "cc": "clang"
+      "resources" : [ ],
+      "options"   : ["-g"],
+      "cc"        : "clang"
     }
 
-    # fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), cmake1.render(project)
+    # set the src location for the project template
+    src = do (template = __dirname.split(path.sep)) ->
+      template.pop()
+      template.push "templates"
+      template.push projectTemplate
+      template.join(path.sep)
+
+    # render a template
+    render = (template, data) ->
+      xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
+      xform.render(data)
+    
+    # create folder at current location
+    fs.mkdirSync path.join(process.cwd(), projectName)
+
+    ## cmake folder
     fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.liquid', project)
     fs.writeFileSync path.join(process.cwd(), projectName, "vala.json"), JSON.stringify(project, null, '  ')
     fs.copyFileSync path.join(src, 'license.md'), path.join(process.cwd(), projectName, 'license.md')
     fs.copyFileSync path.join(src, 'readme.md'), path.join(process.cwd(), projectName, 'readme.md')
 
     fs.mkdirSync path.join(process.cwd(), projectName, '.vscode')
-    for file in vscode
+    for file in vscodeFiles
       fs.copyFileSync path.join(src, '.vscode', file), path.join(process.cwd(), projectName, '.vscode', file)
 
     fs.mkdirSync path.join(process.cwd(), projectName, 'cmake')
-    for file in cmake
+    for file in cmakeFiles
       fs.copyFileSync path.join(src, 'cmake', file), path.join(process.cwd(), projectName, 'cmake', file)
 
     ## data folder
@@ -98,11 +106,10 @@ module.exports =
 
     ## src folder
     fs.mkdirSync path.join(process.cwd(), projectName, 'src')
-    # fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), cmake2.render(project)
     fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), render('src/CMakeLists.liquid', project)
     fs.copyFileSync path.join(src, 'src', 'Config.vala.base'), path.join(process.cwd(), projectName, 'src', 'Config.vala.base')
     fs.writeFileSync path.join(process.cwd(), projectName, 'src', "#{projectName}.vala"), """
-    public class #{projectName} {
+    public class #{ucfirst(projectName)} {
 
       static int main (string[] args) {
         stdout.printf("Hello World\\n");

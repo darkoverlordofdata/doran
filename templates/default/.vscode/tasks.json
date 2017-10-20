@@ -1,0 +1,31 @@
+{
+    "version": "0.1.0",
+    "cwd": "${workspaceRoot}",
+    "isShellCommand": true,
+    "showOutput": "always",
+    "echoCommand": true,
+    "suppressTaskName": true,
+    "isBackground": true,
+    "windows": {
+        "command": "C:\\msys64\\usr\\bin\\bash.exe",
+        "args": ["-lic"],
+        "tasks": [
+            {
+                "isBuildCommand": true,
+                "taskName": "build",
+                "args": ["cd $OLDPWD/install; make"]
+            }
+        ]
+    },
+    "linux": {
+        "command": "/bin/sh",
+        "args": [""],
+        "tasks": [
+            {
+                "isBuildCommand": true,
+                "taskName": "build",
+                "args": ["cd install && make"]
+            }
+        ]
+    },
+}

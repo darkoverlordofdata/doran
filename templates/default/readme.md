@@ -1,6 +1,6 @@
 # doran
 
-Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will.
+Autovala is like the best thing ever. But it doesn't work on windows, and it's depencancies and scope make it unlikely that it ever will.
 
 ### Work In Progress
 
