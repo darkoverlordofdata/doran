@@ -1,6 +1,4 @@
 {
-    "name": "doran",
-    "version": "0.0.1",
     "vala": "0.34",
     "files": [
         "src/doran.vala"

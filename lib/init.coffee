@@ -65,6 +65,11 @@ module.exports =
       "cc"        : "clang"
     }
 
+    # define some custom filters
+    liquid.Template.registerFilter do (filter = ->) ->
+      filter.ucfirst = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
+      filter
+
     # set the src location for the project template
     src = do (template = __dirname.split(path.sep)) ->
       template.pop()
@@ -82,9 +87,11 @@ module.exports =
 
     ## cmake folder
     fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.liquid', project)
-    fs.writeFileSync path.join(process.cwd(), projectName, "vala.json"), JSON.stringify(project, null, '  ')
+    fs.writeFileSync path.join(process.cwd(), projectName, "valac.json"), JSON.stringify(project, null, '  ')
     fs.copyFileSync path.join(src, 'license.md'), path.join(process.cwd(), projectName, 'license.md')
     fs.copyFileSync path.join(src, 'readme.md'), path.join(process.cwd(), projectName, 'readme.md')
+    fs.copyFileSync path.join(src, '.bowerrc'), path.join(process.cwd(), projectName, '.bowerrc')
+    fs.writeFileSync path.join(process.cwd(), projectName, "bower.json"), render('bower.liquid', project)
 
     fs.mkdirSync path.join(process.cwd(), projectName, '.vscode')
     for file in vscodeFiles
@@ -108,13 +115,5 @@ module.exports =
     fs.mkdirSync path.join(process.cwd(), projectName, 'src')
     fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), render('src/CMakeLists.liquid', project)
     fs.copyFileSync path.join(src, 'src', 'Config.vala.base'), path.join(process.cwd(), projectName, 'src', 'Config.vala.base')
-    fs.writeFileSync path.join(process.cwd(), projectName, 'src', "#{projectName}.vala"), """
-    public class #{ucfirst(projectName)} {
-
-      static int main (string[] args) {
-        stdout.printf("Hello World\\n");
-        return 1;
-      }
-    }
-    """
+    fs.writeFileSync path.join(process.cwd(), projectName, 'src', "#{projectName}.vala"), render('src/vala.liquid', project)
     return

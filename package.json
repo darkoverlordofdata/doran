@@ -12,6 +12,7 @@
   "author": "darkoverlordofdata",
   "license": "MIT",
   "dependencies": {
+    "bower-installer": "^1.3.6",
     "coffeescript": "^2.0.1",
     "fs-copy-file-sync": "^1.0.1",
     "liquid.coffee": "^0.1.8"
