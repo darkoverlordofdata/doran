@@ -20,7 +20,21 @@ install = (name) ->
   liquid.Template.registerFilter do (filter = ->) ->
     filter.ucfirst  = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
     filter.camel    = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
+    filter.nosrc    = (str) -> str.replace("src/", "")
     filter
+
+  # render a template
+  render = (template, data) ->
+    # set the src location for the project template
+    src = do (s = __dirname.split(path.sep)) ->
+      s.pop()
+      s.push "templates"
+      s.push data.template
+      s.join(path.sep)
+    
+    xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
+    xform.render(data)
+
 
   ## get the repository url from the package registry
   registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{name}"
@@ -67,23 +81,13 @@ install = (name) ->
 
             ## need recursive file list
             recursive path.join('src', name), (err, files) ->
+
+              # update the project data
               project = require(path.join(process.cwd(), 'project.json'))
-
-              # set the src location for the project template
-              src = do (template = __dirname.split(path.sep)) ->
-                template.pop()
-                template.push "templates"
-                template.push project.template
-                template.join(path.sep)
-              
-              # render a template
-              render = (template, data) ->
-                xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
-                xform.render(data)
-
-
               project.files.push file.replace(/\\/g, '/') for file in files
               fs.writeFileSync path.join(process.cwd(), 'project.json'), JSON.stringify(project, null, '  ')
+
+              # update the CMake scripts
               fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.liquid', project)
               fs.writeFileSync path.join(process.cwd(), 'src', 'CMakeLists.txt'), render('src/CMakeLists.liquid', project)
 

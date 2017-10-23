@@ -26,7 +26,8 @@ include (ValaPrecompile)
 set (VALA_PACKAGES ${VALA_PACKAGES} {{ pkg }}){% endfor %}
 
 set (APP_SOURCES ${APP_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/Config.vala)
-set (APP_SOURCES ${APP_SOURCES} {{ name }}.vala)
+{% for file in files %}
+set (APP_SOURCES ${APP_SOURCES} {{ file | nosrc }}){% endfor %}
 
 # set (CUSTOM_VAPIS_LIST ${CUSTOM_VAPIS_LIST} ${CMAKE_SOURCE_DIR}/src/vapis/lua.vapi)
 # set (COMPILE_OPTIONS ${COMPILE_OPTIONS} --vapidir=${CMAKE_SOURCE_DIR}/src/vapis )
