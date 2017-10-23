@@ -1,8 +1,4 @@
 ###
- * Entitas code generation
- *
- * emulate the partial class strategy for extensions
- * used by Entitas_CSharp
  *
 ###
 fs = require('fs')
@@ -17,6 +13,6 @@ module.exports =
 # @param  [String]  projectName
 # @return none
 #
-  run: (projectName) ->
+  main: (projectName) ->
     console.log "doran::build"
     return

@@ -6,33 +6,31 @@
 #|
 #| This file is a part of doran
 #|
-#| Entitas is free software; you can copy, modify, and distribute
+#| doran is free software; you can copy, modify, and distribute
 #| it under the terms of the MIT License
 #|
 #+--------------------------------------------------------------------+
 #
-# entitas command dispatch
+# doran command dispatch
 #
 
 Object.defineProperties module.exports,
 
   init:  
-    get: ->
-      require('./init.coffee').run
+    get: -> require('./init.coffee').main
 
-  get: 
-    get: ->
-      require('./get.coffee').run
+  install: 
+    get: -> require('./install.coffee').main
+
+  uninstall: 
+    get: -> require('./uninstall.coffee').main
 
   add: 
-    get: ->
-      require('./add.coffee').run
+    get: -> require('./add.coffee').main
       
   remove: 
-    get: ->
-      require('./remove.coffee').run
+    get: -> require('./remove.coffee').main
       
   build: 
-    get: ->
-      require('./build.coffee').run
+    get: -> require('./build.coffee').main
             

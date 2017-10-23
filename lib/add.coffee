@@ -17,6 +17,6 @@ module.exports =
 # @param  [String]  projectName
 # @return none
 #
-  run: (projectName) ->
+  main: (projectName) ->
     console.log "doran::add"
     return
