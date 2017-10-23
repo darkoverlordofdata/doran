@@ -60,7 +60,7 @@ init = (projectName, projectTemplate = 'default') ->
   liquid.Template.registerFilter do (filter = ->) ->
     filter.ucfirst  = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
     filter.camel    = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
-    filter.nosrc    = (str) -> str.replace("src/", "")
+    filter.nosrc    = (str) -> str.replace(/^src\//, "")
     filter
 
   # set the src location for the project template

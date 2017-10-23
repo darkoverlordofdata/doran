@@ -20,7 +20,7 @@ install = (name) ->
   liquid.Template.registerFilter do (filter = ->) ->
     filter.ucfirst  = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
     filter.camel    = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
-    filter.nosrc    = (str) -> str.replace("src/", "")
+    filter.nosrc    = (str) -> str.replace(/^src\//, "")
     filter
 
   # render a template
@@ -58,6 +58,7 @@ install = (name) ->
           config = require(path.join(process.cwd(), 'bower.json'))
           config.install.path = 
             vala  : 'src'
+            gs    : 'src'
             c     : 'src'
             h     : 'src'
             txt   : 'src'
