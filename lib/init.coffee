@@ -41,23 +41,29 @@ init = (projectName, projectTemplate = 'default') ->
   project = {
     name      : projectName,
     template  : projectTemplate,
-    release   : "",
-    desc      : "",
-    version   : "0.0.1",
-    vala      : "0.34",
+    version: "0.0.1",
+    vala: "0.34",
+    authors: [
+      ""
+    ],
+    description: "",
+    license: "",
+    private: true,
+    ignore: [],
+    devDependencies: {},
+    dependencies: {},
     files     : [
       "src/#{projectName}.vala"
     ],
     libraries : { },
     packages  : [
-      "gee-0.8",
       "gio-2.0",
       "glib-2.0",
       "gobject-2.0"
     ],
     resources : [ ],
     options   : [ ],
-    vapidir   : "src/vapis"
+    vapidir   : "/src/vapis"
   }
 
   src = getSrc(projectTemplate)
@@ -67,11 +73,10 @@ init = (projectName, projectTemplate = 'default') ->
 
   ## cmake folder
   fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.txt', project)
-  fs.writeFileSync path.join(process.cwd(), projectName, "project.json"), JSON.stringify(project, null, '  ')
+  fs.writeFileSync path.join(process.cwd(), projectName, "component.json"), JSON.stringify(project, null, '  ')
   fs.copyFileSync path.join(src, 'license.md'), path.join(process.cwd(), projectName, 'license.md')
   fs.copyFileSync path.join(src, 'readme.md'), path.join(process.cwd(), projectName, 'readme.md')
   fs.copyFileSync path.join(src, '.bowerrc'), path.join(process.cwd(), projectName, '.bowerrc')
-  fs.writeFileSync path.join(process.cwd(), projectName, "bower.json"), render('bower.liquid', project)
 
   fs.mkdirSync path.join(process.cwd(), projectName, '.vscode')
   for file in vscodeFiles

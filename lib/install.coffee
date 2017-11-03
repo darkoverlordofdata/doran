@@ -25,12 +25,12 @@ configure = ->
     libs = JSON.parse(stdout)
     fs.recursiveReaddir path.join(process.cwd(), 'src'), (error, files) ->
       if error then throw error
-      project = require(path.join(process.cwd(), 'project.json'))
+      project = require(path.join(process.cwd(), 'component.json'))
       project.libraries = []
       project.libraries.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
       project.files = []
       project.files.push strip(file) for file in files when ".gs.vala".indexOf(path.extname(file)) != -1
-      fs.writeFileSync path.join(process.cwd(), 'project.json'), JSON.stringify(project, null, '  ')
+      fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
       fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt', project)
 
 #
@@ -51,15 +51,6 @@ install = (name, repository = "remote") ->
 
     request registry, (error, response, uri) ->
       if error then throw error
-      # uri = switch name ## testing patch for local testing
-      #   when "bosco"    then "../../GitHub/doran-bosco"
-      #   when "entitas"  then "../../GitHub/doran-entitas"
-      #   when "goop"     then "../../GitHub/doran-goop"
-      #   when "lua"      then "../../GitHub/doran-lua"
-      #   when "mt19937"  then "../../GitHub/doran-mt19937"
-      #   when "sdx"      then "../../GitHub/doran-sdx"
-      #   when "utils"    then "../../GitHub/doran-utils"
-      #   else uri0
       console.log "Install from: #{uri}"
       bower.install(["#{name}=#{uri}"], save: true)
         .on 'end', (results) ->
