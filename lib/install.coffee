@@ -39,23 +39,23 @@ configure = ->
 # @param  [String]  name
 # @return none
 #
-install = (name) ->
+install = (name, repository = "remote") ->
 
   if name isnt ''
     ## get the repository url from the package registry
-    registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{name}"
+    registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{repository}/#{name}"
 
     request registry, (error, response, uri) ->
       if error then throw error
-      uri = switch name ## testing patch for local testing
-        when "bosco"    then "../../GitHub/doran-bosco"
-        when "entitas"  then "../../GitHub/doran-entitas"
-        when "goop"     then "../../GitHub/doran-goop"
-        when "lua"      then "../../GitHub/doran-lua"
-        when "mt19937"  then "../../GitHub/doran-mt19937"
-        when "sdx"      then "../../GitHub/doran-sdx"
-        when "utils"    then "../../GitHub/doran-utils"
-        else uri
+      # uri = switch name ## testing patch for local testing
+      #   when "bosco"    then "../../GitHub/doran-bosco"
+      #   when "entitas"  then "../../GitHub/doran-entitas"
+      #   when "goop"     then "../../GitHub/doran-goop"
+      #   when "lua"      then "../../GitHub/doran-lua"
+      #   when "mt19937"  then "../../GitHub/doran-mt19937"
+      #   when "sdx"      then "../../GitHub/doran-sdx"
+      #   when "utils"    then "../../GitHub/doran-utils"
+      #   else uri
       console.log "Install from: #{uri}"
 
       bower.install(["#{name}=#{uri}"], save: true)
@@ -75,15 +75,19 @@ install = (name) ->
 ###
 module.exports = main: (args ...) ->
   moduleName = ''
-  projectTemplate = undefined
+  repository = undefined
 
   i = 0
   while i < args.length
     switch args[i]
-      when '-t', '--template'
-        projectTemplate = args[++i]
+      when '-l', '--local'
+        repository = 'local'
+        ++i
+      when '-r', '--remote'
+        repository = 'remote'
+        ++i
       else
         moduleName = args[i]
     i++
     
-  install moduleName
+  install moduleName, repository
