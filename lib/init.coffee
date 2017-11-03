@@ -1,20 +1,21 @@
 ###
  *
 ###
-fs = require('fs')
-path = require('path')
-liquid = require('liquid.coffee')
-fs.copyFileSync = require('fs-copy-file-sync')
+fs = require 'fs'
+path = require 'path'
+fs.copyFileSync = require 'fs-copy-file-sync'
+
+{ liquid } = require './util'
+{ render } = require './util'
+{ getSrc } = require './util'
 
 cmakeFiles = [
-  'CMakeLists.txt',
   "FindVala.cmake",
   "FindValadoc.cmake",
   "GObjectIntrospectionMacros.cmake",
   "GSettings.cmake",
   "Makefile",
   "ParseArguments.cmake",
-  "GSettings.cmake",
   "README",
   "README.Vala.rst",
   "Tests.cmake",
@@ -38,48 +39,34 @@ vscodeFiles = [
 #
 init = (projectName, projectTemplate = 'default') ->
   project = {
-    "name"      : projectName,
-    "template"  : projectTemplate,
-    "version"   : "0.0.1",
-    "vala"      : "0.34",
-    "files"     : [
+    name      : projectName,
+    template  : projectTemplate,
+    release   : "",
+    desc      : "",
+    version   : "0.0.1",
+    vala      : "0.34",
+    files     : [
       "src/#{projectName}.vala"
     ],
-    "packages"  : [
+    libraries : { },
+    packages  : [
       "gee-0.8",
       "gio-2.0",
       "glib-2.0",
       "gobject-2.0"
     ],
-    "resources" : [ ],
-    "options"   : ["-g"],
-    "cc"        : "clang"
+    resources : [ ],
+    options   : [ ],
+    vapidir   : "src/vapis"
   }
 
-  # define some custom filters
-  liquid.Template.registerFilter do (filter = ->) ->
-    filter.ucfirst  = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
-    filter.camel    = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
-    filter.nosrc    = (str) -> str.replace(/^src\//, "")
-    filter
+  src = getSrc(projectTemplate)
 
-  # set the src location for the project template
-  src = do (template = __dirname.split(path.sep)) ->
-    template.pop()
-    template.push "templates"
-    template.push projectTemplate
-    template.join(path.sep)
-
-  # render a template
-  render = (template, data) ->
-    xform = liquid.Template.parse(fs.readFileSync(path.join(src, template), 'utf8'))
-    xform.render(data)
-  
   # create folder at current location
   fs.mkdirSync path.join(process.cwd(), projectName)
 
   ## cmake folder
-  fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.liquid', project)
+  fs.writeFileSync path.join(process.cwd(), projectName, 'CMakeLists.txt'), render('CMakeLists.txt', project)
   fs.writeFileSync path.join(process.cwd(), projectName, "project.json"), JSON.stringify(project, null, '  ')
   fs.copyFileSync path.join(src, 'license.md'), path.join(process.cwd(), projectName, 'license.md')
   fs.copyFileSync path.join(src, 'readme.md'), path.join(process.cwd(), projectName, 'readme.md')
@@ -94,19 +81,12 @@ init = (projectName, projectTemplate = 'default') ->
   for file in cmakeFiles
     fs.copyFileSync path.join(src, 'cmake', file), path.join(process.cwd(), projectName, 'cmake', file)
 
-  ## data folder
-  fs.mkdirSync path.join(process.cwd(), projectName, 'data')
-  fs.mkdirSync path.join(process.cwd(), projectName, 'data', 'local')
-  fs.copyFileSync path.join(src, 'data', 'local', 'CMakeLists.txt'), path.join(process.cwd(), projectName, 'data', 'CMakeLists.txt')
-
-  ## po folder
-  fs.mkdirSync path.join(process.cwd(), projectName, 'po')
-  fs.copyFileSync path.join(src, 'po', 'CMakeLists.txt'), path.join(process.cwd(), projectName, 'po', 'CMakeLists.txt')
-  fs.copyFileSync path.join(src, 'po', 'POTFILES.in'), path.join(process.cwd(), projectName, 'po', 'POTFILES.in')
+  # ## data folder
+  # fs.mkdirSync path.join(process.cwd(), projectName, 'data')
+  # fs.copyFileSync path.join(src, 'data', 'CMakeLists.txt'), path.join(process.cwd(), projectName, 'data', 'CMakeLists.txt')
 
   ## src folder
   fs.mkdirSync path.join(process.cwd(), projectName, 'src')
-  fs.writeFileSync path.join(process.cwd(), projectName, 'src', 'CMakeLists.txt'), render('src/CMakeLists.liquid', project)
   fs.copyFileSync path.join(src, 'src', 'Config.vala.base'), path.join(process.cwd(), projectName, 'src', 'Config.vala.base')
   fs.writeFileSync path.join(process.cwd(), projectName, 'src', "#{projectName}.vala"), render('src/vala.liquid', project)
   return
@@ -122,7 +102,7 @@ module.exports =
     projectTemplate = undefined
 
     i = 0
-    while i < args.length
+    while i < args.length 
       switch args[i]
         when '-t', '--template'
           projectTemplate = args[++i]
@@ -131,3 +111,4 @@ module.exports =
       i++
       
     init projectName, projectTemplate
+

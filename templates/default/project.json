@@ -1,4 +1,7 @@
 {
+    "name": "template",
+    "template": "default",
+    "version": "0.0.1",
     "vala": "0.34",
     "files": [
         "src/doran.vala"

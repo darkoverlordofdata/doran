@@ -1,0 +1,90 @@
+cmake_minimum_required ( VERSION 3.1 )
+###################################################################################
+#
+#   Build {{ name }}
+#
+###################################################################################
+project ( {{ name }} VERSION {{ version }} )
+
+#
+# enable features
+#
+include ( CMakeToolsHelpers OPTIONAL )
+list ( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+find_package (PkgConfig)
+find_package (Vala REQUIRED)
+
+#
+#   libraries - sources & packages
+#
+
+{% for lib in libraries %}
+add_subdirectory ( {{ lib }} ){% endfor %}
+if (EXISTS ${CMAKE_SOURCE_DIR}/data )
+    add_subdirectory (data)
+    list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
+endif ()
+
+#
+#   generated code configuration
+#
+configure_file ( 
+    ${CMAKE_SOURCE_DIR}/src/Config.vala.base 
+    ${CMAKE_BINARY_DIR}/src/Config.vala 
+)
+file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Config.vala)
+
+#
+#   application source
+#
+list ( APPEND VALA_SOURCES ${CONFIG_VALA} ){% for file in files %}
+list ( APPEND VALA_SOURCES {{ file }} ){% endfor %}
+#
+#   dependencies
+#
+{% for pkg in packages %}
+list ( APPEND PACKAGES {{ pkg }} ){% endfor %}
+
+pkg_check_modules (DEPS REQUIRED ${PACKAGES})
+add_definitions ( ${DEPS_CFLAGS} )
+link_libraries ( ${DEPS_LIBRARIES} )
+link_directories ( ${DEPS_LIBRARY_DIRS} )
+
+#
+#   compiler options
+#
+list ( APPEND VALAC_OPTIONS --disable-warnings){% if vapidir != '' %}
+list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}{{ vapidir }}){% endif %}
+
+if (WIN32)  
+    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )
+endif ()
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w" )
+
+include_directories(AFTER ${INCLUDES})
+#
+#   compile vala code
+#
+include (ValaVersion)
+ensure_vala_version ({{ vala }} MINIMUM)
+include (ValaPrecompile)
+vala_precompile (
+    VALA_C ${PROJECT_NAME}
+        ${VALA_SOURCES}
+    PACKAGES
+        ${PACKAGES}
+    CUSTOM_VAPIS
+        ${CUSTOM_VAPIS}
+    OPTIONS
+        ${VALAC_OPTIONS}
+    )
+
+#
+#   compile ccode & link executable
+#
+add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
+target_link_libraries ( ${PROJECT_NAME} m )
+install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+
+# (generated from template: {{ template}}. Do not modify. )
