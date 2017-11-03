@@ -41,7 +41,11 @@ configure = ->
 #
 install = (name, repository = "remote") ->
 
-  if name isnt ''
+  if name is ''
+    console.log "update configuration" 
+    configure()
+
+  else
     ## get the repository url from the package registry
     registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{repository}/#{name}"
 
@@ -55,16 +59,12 @@ install = (name, repository = "remote") ->
       #   when "mt19937"  then "../../GitHub/doran-mt19937"
       #   when "sdx"      then "../../GitHub/doran-sdx"
       #   when "utils"    then "../../GitHub/doran-utils"
-      #   else uri
+      #   else uri0
       console.log "Install from: #{uri}"
-
       bower.install(["#{name}=#{uri}"], save: true)
         .on 'end', (results) ->
           configure()
 
-  else
-    console.log "update configuration" 
-    configure()
 
   return
 
@@ -82,10 +82,8 @@ module.exports = main: (args ...) ->
     switch args[i]
       when '-l', '--local'
         repository = 'local'
-        ++i
       when '-r', '--remote'
         repository = 'remote'
-        ++i
       else
         moduleName = args[i]
     i++
