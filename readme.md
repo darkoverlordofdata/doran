@@ -4,5 +4,4 @@ Autovala is like the best thing ever. But it doesn't work on windows, and it's d
 
 ### Work In Progress
 
-Doran is a cross platform build tool/package manager for Vala. Co inspired by Autovala and Bower and Sam (ooc package manager), doran should work on Windows 10 and Linux. So development is on windows, testing on linux.
-
+Doran is a thin wrapper around bower that redirects access to it's own registry, and regenerates project metadata and build instructions.

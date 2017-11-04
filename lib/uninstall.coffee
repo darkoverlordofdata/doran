@@ -4,6 +4,7 @@
 fs = require('fs')
 path = require('path')
 bower = require('bower').commands
+{ sync } = require './util'
 
 #
 # uninstall a module 
@@ -19,10 +20,9 @@ uninstall = (name) ->
   #   * update valac.json to remove module files
   #   * update the cmake texts from the template 
   #
-  bower.uninstall([name], save: true)
+  bower.uninstall([name])
     .on 'end', (res) ->
-    console.log "uninstall?"
-    console.log res
+      sync()
   return
 
 ###

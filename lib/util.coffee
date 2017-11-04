@@ -5,8 +5,9 @@
 ###
 fs = require 'fs'
 path = require 'path'
-
-liquid = require('liquid.coffee')
+liquid = require 'liquid.coffee'
+fs.recursiveReaddir = require 'recursive-readdir'
+{ exec } = require 'child_process'
 
 #
 # Load Liquid templates with some custom filters
@@ -48,9 +49,39 @@ getFolders = (folders, files...) ->
       unique[path.dirname(name)] = true
   Object.keys(unique)
 
+#
+# clean up file path name
+#
+clean = (file) ->
+  file = file.replace(/\\/g, "/")
+  p = process.cwd().replace(/\\/g, "/")
+  if file.indexOf(p) is 0
+    file = file.substring(p.length+1)
+  return file
 
-  
+#
+# Sync metadata and CMake to reflect the current state of the project
+#
+sync = ->
+  exec "bower list --path --json", (error, stdout, stderr) ->
+    if error then throw error
+    libs = JSON.parse(stdout)
+    fs.recursiveReaddir path.join(process.cwd(), 'src'), (error, files) ->
+      if error then throw error
+      project = require(path.join(process.cwd(), 'component.json'))
+      project.files = []
+      project.files.push clean(file) for file in files when ".gs.vala".indexOf(path.extname(file)) != -1
+      fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
+      
+      project.libraries = []
+      project.libraries.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
+      fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt', project)
+
+
+
+
 module.exports =
   liquid: liquid
   getSrc: getSrc
   render: render
+  sync:   sync
