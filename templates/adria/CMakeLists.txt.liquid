@@ -10,7 +10,7 @@ project ( {{ name }} VERSION {{ version }} )
 # enable features
 #
 include ( CMakeToolsHelpers OPTIONAL )
-list ( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
+list ( APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/adria)
 find_package (PkgConfig)
 find_package (Vala REQUIRED)
 
@@ -33,10 +33,14 @@ configure_file (
 file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Config.vala)
 
 #
+#   out of tree build location
+#{% for file in files %}
+configure_file ( {{ file }} {{ file }} ){% endfor %}
+#
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} ){% for file in files %}
-list ( APPEND VALA_SOURCES {{ file }} ){% endfor %}
+list ( APPEND VALA_SOURCES build/{{ file }} ){% endfor %}
 #
 #   pkg-config dependencies
 #{% for pkg in packages %}

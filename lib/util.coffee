@@ -75,7 +75,7 @@ sync = ->
       
       project.libraries = []
       project.libraries.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
-      fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt', project)
+      fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt.liquid', project)
 
 
 

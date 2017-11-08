@@ -5,33 +5,32 @@ fs = require 'fs'
 path = require 'path'
 fs.copyFileSync = require 'fs-copy-file-sync'
 { liquid, render, getSrc } = require './util'
-
 #
-# Copy template to destionation using cfg
+# Copy template to destionation using cfg-data
 #
 #  
-copyTemplates = (tmppath, newpath, data) ->
+copyTemplates = (tmpPath, newPath, data) ->
 
-  fs.mkdirSync newpath unless fs.existsSync(newpath)
+  fs.mkdirSync newPath unless fs.existsSync(newPath)
 
-  for tmpname in fs.readdirSync(tmppath)
+  for tmpName in fs.readdirSync(tmpPath)
 
-    ext = path.extname(tmpname)
-    newname = if ext is ".liquid" then tmpname.substring(0, tmpname.length-7) else tmpname
-    newname = liquid.Template.parse(newname).render(data)
+    ext = path.extname(tmpName)
+    newName = if ext is ".liquid" then tmpName.substring(0, tmpName.length-7) else tmpName
+    newName = liquid.Template.parse(newName).render(data)
 
-    tmp_file = path.join(tmppath, tmpname)
-    new_file = path.join(newpath, newname)
+    tmpFile = path.join(tmpPath, tmpName)
+    newFile = path.join(newPath, newName)
 
-    if fs.statSync(tmp_file).isDirectory()
-      copyTemplates tmp_file, new_file, data
+    if fs.statSync(tmpFile).isDirectory()
+      copyTemplates tmpFile, newFile, data
 
     else
       if ext is ".liquid"
-        fs.writeFileSync new_file, liquid.Template.parse(fs.readFileSync(tmp_file, 'utf8')).render(data)
+        fs.writeFileSync newFile, liquid.Template.parse(fs.readFileSync(tmpFile, 'utf8')).render(data)
 
       else
-        fs.copyFileSync tmp_file, new_file, data
+        fs.copyFileSync tmpFile, newFile
 
 
 #
@@ -48,12 +47,10 @@ init = (projectName, projectTemplate = 'default') ->
     template        : projectTemplate,
     version         : "0.0.1",
     vala            : "0.34",
-    authors         : [ "" ],
-    description     : "",
-    license         : "",
+    authors         : [ ],
+    description     : projectName,
+    license         : "MIT",
     private         : true,
-    ignore          : [],
-    devDependencies : {},
     dependencies    : {},
     files           : [ "src/#{projectName}.vala" ],
     packages        : [
@@ -61,9 +58,9 @@ init = (projectName, projectTemplate = 'default') ->
       "glib-2.0",
       "gobject-2.0"
     ],
-    libraries       : [ ],
     options         : [ ],
-    vapidir         : "/src/vapis"
+    vapidir         : "/src/vapis",
+    console         : true
   }
 
   templatePath = getSrc(projectTemplate)
