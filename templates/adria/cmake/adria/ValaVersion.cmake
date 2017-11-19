@@ -152,7 +152,7 @@ macro(ensure_vala_version ensure_version)
 		if (ADRIA_EXECUTABLE STREQUAL "ADRIA_EXECUTABLE-NOTFOUND")
 			message (STATUS "ADRIAC not found.")
 		else()
-			message(STATUS "  found Adriac. Praise the Ori.")
+			message(STATUS "  found Adriac. Praise be to the Ori.")
 		endif()
 			
 	endif(USE_VALA_BINARY)
