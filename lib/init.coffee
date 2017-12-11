@@ -46,7 +46,7 @@ init = (projectName, projectTemplate = 'default') ->
     name            : projectName,
     template        : projectTemplate,
     version         : "0.0.1",
-    vala            : "0.34",
+    vala            : "0.26",
     authors         : [ ],
     description     : projectName,
     license         : "MIT",
