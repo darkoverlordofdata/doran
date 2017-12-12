@@ -11,10 +11,7 @@ Doran - package manager for Vala
 
 Usage:
   doran init project-name
-  doran get package-name
-  doran add file-name
-  doran remove file-name
-  doran build
+  doran install <package-name>
 
 Options:
   -d  [--debug]     # set debug flag, where available
