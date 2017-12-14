@@ -2,13 +2,7 @@
 
 Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will.
 
-### Work In Progress
-
-Doran is a thin wrapper around bower
-
-    redirects access to it's own registry
-    updates project metadata
-    regenerates build system.
+Doran packages are cmake modules shoved into bower format. Doran scans the src folder to build a file list, using it to generate a CMakeLists.txt file to drive build via cmake.
 
 
 ### Install
@@ -20,7 +14,7 @@ Doran is a thin wrapper around bower
     name
         project name
     template
-        template name
+        template name -> |default|adria|
     version
         application version
     vala
@@ -37,10 +31,12 @@ Doran is a thin wrapper around bower
     dependencies
         libraries maintained by bower
     files
-        files in src folder
+        files in src folder (maintained by doran)
     packages
-        pkg-config dependencies
+        pkg-config dependencies (maintained by doran)
     options
         valac options
     vapidir
         local vapi folder
+    console
+        false for windowed applications
