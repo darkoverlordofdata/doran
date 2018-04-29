@@ -10,11 +10,14 @@ usage = """
 Doran - package manager for Vala
 
 Usage:
-  doran init project-name
-  doran install <package-name>
+  doran init project-name           # create folder and initialize project
+  doran install <package-name>      # install module package-name
+  doran uninstall <package-name>    # uninstall module package-name
+  doran update [-t template]        # refresh CMakeLists.txt
 
 Options:
-  -d  [--debug]     # set debug flag, where available
+  -h  [--help]      # display this message
+  -t  [--template]  # template name
   -v  [--version]   # display version
 """
 switch process.argv[2]
@@ -25,11 +28,8 @@ switch process.argv[2]
 
   when 'uninstall' then doran.uninstall process.argv.slice(3)...
 
-  when 'add' then doran.add process.argv.slice(3)...
+  when 'update' then doran.install()
 
-  when 'remove' then doran.remove process.argv.slice(3)...
-
-  when 'build' then doran.build process.argv.slice(3)...
 
   when '--version' then console.log "doran v"+require('../package.json').version
 

@@ -22,6 +22,9 @@ Object.defineProperties module.exports,
   install: 
     get: -> require('./install.coffee').main
 
+  update: 
+    get: -> require('./install.coffee').main
+
   uninstall: 
     get: -> require('./uninstall.coffee').main
 

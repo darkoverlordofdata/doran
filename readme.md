@@ -1,8 +1,12 @@
 # doran
 
-Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will.
+Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will. Doran runs on both windows
+and linux.
 
 Doran packages are cmake modules shoved into bower format. Doran scans the src folder to build a file list, using it to generate a CMakeLists.txt file to drive build via cmake.
+
+    the intention is that this is a prototype. but it works too well. re-writing
+    in vala requires replacements for both bower and liquid.coffee
 
 
 ### Install
@@ -40,3 +44,4 @@ Doran packages are cmake modules shoved into bower format. Doran scans the src f
         local vapi folder
     console
         false for windowed applications
+

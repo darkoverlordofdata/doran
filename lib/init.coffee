@@ -58,7 +58,10 @@ init = (projectName, projectTemplate = 'default') ->
       "glib-2.0",
       "gobject-2.0"
     ],
-    options         : [ ],
+    options         : { 
+      VERSION       : "0.0.1", 
+      RELEASE_NAME  : projectName 
+    },
     vapidir         : "/src/vapis",
     console         : true
   }
