@@ -2,6 +2,7 @@
  *
 ###
 fs = require 'fs'
+path = require 'path'
 { sync } = require './util'
 
 #
@@ -23,14 +24,6 @@ source = (pathToSource = 'src') ->
 ##
 ###
 module.exports = main: (args ...) ->
-  path = undefined
-
-  i = 0
-  while i < args.length
-    switch args[i]
-      when '-s', '--source'
-        path = args[++i]
-    i++
     
-  source path
+  source args[0]
   
