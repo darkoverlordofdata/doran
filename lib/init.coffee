@@ -40,7 +40,7 @@ copyTemplates = (tmpPath, newPath, data) ->
 # @param  [String]  projectTemplate
 # @return none
 #
-init = (projectName, projectTemplate = 'default') ->
+init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
 
   project = {
     name            : projectName,
@@ -52,7 +52,8 @@ init = (projectName, projectTemplate = 'default') ->
     license         : "MIT",
     private         : true,
     dependencies    : {},
-    files           : [ "src/#{projectName}.vala" ],
+    source          : srcPath,
+    files           : [ "#{srcPath}/#{projectName}.vala" ],
     packages        : [
       "gio-2.0",
       "glib-2.0",
@@ -84,15 +85,18 @@ module.exports =
   main: (args ...) ->
     projectName = ''
     projectTemplate = undefined
+    srcPath = undefined
 
     i = 0
     while i < args.length 
       switch args[i]
         when '-t', '--template'
           projectTemplate = args[++i]
+        when '-s', '--source'
+          srcPath = args[++i]
         else
           projectName = args[i]
       i++
       
-    init projectName, projectTemplate
+    init projectName, projectTemplate, srcPath
 

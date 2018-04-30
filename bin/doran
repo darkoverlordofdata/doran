@@ -14,6 +14,7 @@ Usage:
   doran install <package-name>      # install module package-name
   doran uninstall <package-name>    # uninstall module package-name
   doran update [-t template]        # refresh CMakeLists.txt
+  doran source path/to/source       # switch source path, for demos
 
 Options:
   -h  [--help]      # display this message
@@ -30,6 +31,7 @@ switch process.argv[2]
 
   when 'update' then doran.install()
 
+  when 'source' then doran.source process.argv.slice(3)...
 
   when '--version' then console.log "doran v"+require('../package.json').version
 

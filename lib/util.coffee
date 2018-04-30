@@ -9,6 +9,7 @@ liquid = require 'liquid.coffee'
 fs.recursiveReaddir = require 'recursive-readdir'
 { exec } = require 'child_process'
 
+
 #
 # Load Liquid templates with some custom filters
 #
@@ -62,11 +63,14 @@ clean = (file) ->
 #
 # Sync metadata and CMake to reflect the current state of the project
 #
-sync = ->
+sync = () ->
   exec "bower list --path --json", (error, stdout, stderr) ->
     if error then throw error
+      
+    project = require(path.join(process.cwd(), 'component.json'))
+    srcPath = project.source ? 'src'
     libs = JSON.parse(stdout)
-    fs.recursiveReaddir path.join(process.cwd(), 'src'), (error, files) ->
+    fs.recursiveReaddir path.join(process.cwd(), srcPath), (error, files) ->
       if error then throw error
       project = require(path.join(process.cwd(), 'component.json'))
       project.files = []
