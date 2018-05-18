@@ -13,12 +13,13 @@ Usage:
   doran init project-name           # create folder and initialize project
   doran install <package-name>      # install module package-name
   doran uninstall <package-name>    # uninstall module package-name
-  doran update [-t template]        # refresh CMakeLists.txt
+  doran update [-t template -l lib] # refresh CMakeLists.txt
   doran source path/to/source       # switch source path, for demos
 
 Options:
   -h  [--help]      # display this message
   -t  [--template]  # template name
+  -l  [--library]   # library name
   -v  [--version]   # display version
 """
 switch process.argv[2]

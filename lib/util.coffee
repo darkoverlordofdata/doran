@@ -77,8 +77,8 @@ sync = () ->
       project.files.push clean(file) for file in files when ".gs.vala".indexOf(path.extname(file)) != -1
       fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
       
-      project.libraries = []
-      project.libraries.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
+      project.installed = []
+      project.installed.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
       fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt.liquid', project)
 
 

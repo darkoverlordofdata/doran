@@ -59,6 +59,9 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
       "glib-2.0",
       "gobject-2.0"
     ],
+    libraries       : [
+      "m"
+    ],
     options         : { 
       VERSION       : "0.0.1", 
       RELEASE_NAME  : projectName 

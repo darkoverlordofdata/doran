@@ -33,15 +33,19 @@ Doran packages are cmake modules shoved into bower format. Doran scans the src f
         true = application
         false = library
     dependencies
-        libraries maintained by bower
+        source libraries maintained using bower
     files
         files in src folder (maintained by doran)
     packages
         pkg-config dependencies (maintained by doran)
+    libraries
+        other libraries
     options
         valac options
     vapidir
         local vapi folder
     console
         false for windowed applications
+    [installed]
+        virtual array of installed source dependencies
 

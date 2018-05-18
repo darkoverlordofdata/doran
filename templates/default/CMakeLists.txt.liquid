@@ -19,8 +19,8 @@ find_package (Vala REQUIRED)
 
 #
 #   libraries - sources & packages
-#{% for lib in libraries %}
-add_subdirectory ( {{ lib }} ){% endfor %}
+#{% for doran in installed %}
+add_subdirectory ( {{ doran }} ){% endfor %}
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -83,7 +83,7 @@ vala_precompile (
 #   compile ccode & link executable
 #
 add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
-target_link_libraries ( ${PROJECT_NAME} m )
+target_link_libraries ( ${PROJECT_NAME} {% for lib in libraries %}{{ lib }} {% endfor %} )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND DEFINED ZEROG)
