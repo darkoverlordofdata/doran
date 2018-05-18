@@ -38,7 +38,7 @@ install = (name, repository = "remote") ->
       if link
       
         console.log "Install from: #{uri}"
-        fs.symlink uri, "./.lib/#{name}", (err) ->
+        fs.symlink path.resolve(uri), "./.lib/#{name}", (err) ->
           if err then throw err
           else sync()
           #
