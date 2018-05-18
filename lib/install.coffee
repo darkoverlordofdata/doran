@@ -37,10 +37,10 @@ install = (name, repository = "remote") ->
 
       if link
       
-        console.log "Install from: #{uri}"
-        fs.symlink path.resolve(uri), "./.lib/#{name}", (err) ->
-          if err then throw err
-          else sync()
+        console.log "Install #{name} from: #{uri}"
+        bower.link(name, name, save: true)
+          .on 'end', (results) ->
+            sync()
           #
           # https://github.com/nodejs/node/issues/18518
           # fs.symlink can’t create directory symlinks on Windows #18518
