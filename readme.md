@@ -5,16 +5,32 @@ and linux.
 
 Doran packages are cmake modules shoved into bower format. Doran scans the src folder to build a file list, using it to generate a CMakeLists.txt file to drive build via cmake.
 
-    the intention is that this is a prototype. but it works too well. re-writing
+    the intention was that this is a prototype. but it works too well. re-writing
     in vala requires replacements for both bower and liquid.coffee
 
+At this point, doran is experimental, and is just used to package my own projects.
 
-### Install
+## Bower?
+Yeah, I know. Don't use bower. I'm not actually storing anything in bower. I'm using it as a transport mechanism that re-routes back to github via the registry folder in the doran project. 
+
+## link
+in doran package folder, such as doran-zerog:
+
+    PS C:\Users\darko\Documents\GitHub\doran-zerog> bower link
+
+then in project
+
+    PS C:\Users\darko\Documents\GitHub\my-cool-demo> doran install --link zerog
+
+Doran will install package as a link to local copy of zerog. This makes it easy to update zerog.
+
+
+## Install
     $ git clone git://github.com/darkoverlordofdata/doran
     $ cd doran
     $ npm install . -g
 
-### component.json
+## component.json
     name
         project name
     template

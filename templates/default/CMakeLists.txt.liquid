@@ -45,7 +45,8 @@ list ( APPEND VALA_SOURCES {{ file }} ){% endfor %}
 #{% for pkg in packages %}
 list ( APPEND PACKAGES {{ pkg }} ){% endfor %}
 
-pkg_check_modules (DEPS REQUIRED ${PACKAGES})
+#{% for pkg in packages %}
+{% if forloop.first %}pkg_check_modules (DEPS REQUIRED ${PACKAGES}){% endif %}{% endfor %}
 add_definitions ( ${DEPS_CFLAGS} )
 link_libraries ( ${DEPS_LIBRARIES} )
 link_directories ( ${DEPS_LIBRARY_DIRS} )

@@ -67,7 +67,7 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
       RELEASE_NAME  : projectName 
     },
     vapidir         : "/src/vapis",
-    console         : true
+    console         : false
   }
 
   templatePath = getSrc(projectTemplate)
