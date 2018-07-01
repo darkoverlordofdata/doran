@@ -66,6 +66,8 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
       VERSION       : "0.0.1", 
       RELEASE_NAME  : projectName 
     },
+    definitions     : [],
+    copy            : null,
     vapidir         : "/src/vapis",
     console         : false
   }
