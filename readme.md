@@ -1,34 +1,39 @@
 # doran
+## package manager for Vala
 
 Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will. Doran runs on both windows
 and linux.
 
+    The intention was that this is a prototype. but it works too well. So I'm leaving well enough alone.
+
 Doran packages are cmake modules shoved into bower format. Doran scans the src folder to build a file list, using it to generate a CMakeLists.txt file to drive build via cmake.
 
-    the intention was that this is a prototype. but it works too well. re-writing
-    in vala requires replacements for both bower and liquid.coffee
+    Bower? Yeah, I know. Don't use bower. But I'm not using this for live web pages.
+    I'm not actually storing anything in bower. I'm using it as a mechanism that manages downloads of Vala and c/c++ dependencies from github.
 
 At this point, doran is experimental, and is just used to package my own projects.
 
-## Bower?
-Yeah, I know. Don't use bower. I'm not actually storing anything in bower. I'm using it as a transport mechanism that re-routes back to github via the registry folder in the doran project. 
-
-## link
-in doran package folder, such as doran-zerog:
-
-    PS C:\Users\darko\Documents\GitHub\doran-zerog> bower link
-
-then in project
-
-    PS C:\Users\darko\Documents\GitHub\my-cool-demo> doran install --link zerog
-
-Doran will install package as a link to local copy of zerog. This makes it easy to update zerog.
 
 
 ## Install
     $ git clone git://github.com/darkoverlordofdata/doran
     $ cd doran
     $ npm install . -g
+
+## Usage
+
+    doran init project-name             # create folder and initialize project
+    doran install [-k] <package-name>   # install module package-name
+    doran uninstall <package-name>      # uninstall module package-name
+    doran update [-t template]          # refresh CMakeLists.txt
+    doran source path/to/source         # change source path
+
+    Options:
+    -h  [--help]      # display this message
+    -k  [--link]      # link local dependancy
+    -t  [--template]  # template name
+    -v  [--version]   # display version
+
 
 ## component.json
     name
@@ -58,6 +63,10 @@ Doran will install package as a link to local copy of zerog. This makes it easy 
         other libraries
     options
         valac options
+    definitions
+        define -D symbols for the compiler
+    copy
+        folder to copy exe to for testing
     vapidir
         local vapi folder
     console

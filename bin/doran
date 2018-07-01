@@ -10,16 +10,16 @@ usage = """
 Doran - package manager for Vala
 
 Usage:
-  doran init project-name           # create folder and initialize project
-  doran install <package-name>      # install module package-name
-  doran uninstall <package-name>    # uninstall module package-name
-  doran update [-t template -l lib] # refresh CMakeLists.txt
-  doran source path/to/source       # switch source path, for demos
+  doran init project-name             # create folder and initialize project
+  doran install [-k] <package-name>   # install module package-name
+  doran uninstall <package-name>      # uninstall module package-name
+  doran update [-t template]          # refresh CMakeLists.txt
+  doran source path/to/source         # change source path
 
 Options:
   -h  [--help]      # display this message
+  -k  [--link]      # link local dependancy
   -t  [--template]  # template name
-  -l  [--library]   # library name
   -v  [--version]   # display version
 """
 switch process.argv[2]
