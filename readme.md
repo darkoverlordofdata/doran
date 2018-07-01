@@ -9,7 +9,8 @@ and linux.
 Doran packages are cmake modules shoved into bower format. Doran scans the src folder to build a file list, using it to generate a CMakeLists.txt file to drive build via cmake.
 
     Bower? Yeah, I know. Don't use bower. But I'm not using this for live web pages.
-    I'm not actually storing anything in bower. I'm using it as a mechanism that manages downloads of Vala and c/c++ dependencies from github.
+    I'm not actually storing anything in bower. I'm using it as a mechanism that 
+    manages downloads of Vala and c/c++ dependencies from github.
 
 At this point, doran is experimental, and is just used to package my own projects.
 
