@@ -50,7 +50,7 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
     authors         : [ ],
     description     : projectName,
     license         : "MIT",
-    private         : true,
+    private         : (if projectTemplate == 'package' then false else true),
     dependencies    : {},
     source          : srcPath,
     files           : [ "#{srcPath}/#{projectName}.vala" ],
@@ -59,6 +59,7 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
       "glib-2.0",
       "gobject-2.0"
     ],
+    includes        : null,
     libraries       : [
       "m"
     ],
@@ -68,7 +69,7 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
     },
     definitions     : [],
     copy            : null,
-    vapidir         : "/src/vapis",
+    vapidir         : (if projectTemplate == 'package' then "vapis" else "/src/vapis"),
     console         : false
   }
 

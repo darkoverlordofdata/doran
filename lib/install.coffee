@@ -15,46 +15,48 @@ bower = require('bower').commands
 #
 install = (name, repository = "remote") ->
 
-  if name is ''
-    bower.install()
-      .on 'end', (results) ->
-        sync()
+  if fs.existsSync('.bowerrc') 
+    if name is ''
+      bower.install()
+        .on 'end', (results) ->
+          sync()
 
+    else
+      ##
+      ## if repository is "link" create link to folder, else:
+      ## get the repository url from the package registry
+      ##
+      link = false
+      if repository is "link" # play the shell game
+        link = true
+        repository = "local"
+
+      registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{repository}/#{name}"
+
+      request registry, (error, response, uri) ->
+        if error then throw error
+
+        if link
+        
+          console.log "Install #{name} from: #{uri}"
+          bower.link(name, name, save: true)
+            .on 'end', (results) ->
+              sync()
+            #
+            # https://github.com/nodejs/node/issues/18518
+            # fs.symlink can’t create directory symlinks on Windows #18518
+            # "The libuv upgrade will make its way into node 8 eventually.
+            # Since there is nothing to do but wait I'll go ahead and close this out."
+            #
+
+        else
+
+          console.log "Install from: #{uri}"
+          bower.install(["#{name}=#{uri}"], save: true)
+            .on 'end', (results) ->
+              sync()
   else
-    ##
-    ## if repository is "link" create link to folder, else:
-    ## get the repository url from the package registry
-    ##
-    link = false
-    if repository is "link" # play the shell game
-      link = true
-      repository = "local"
-
-    registry = "https://raw.githubusercontent.com/darkoverlordofdata/doran/master/registry/#{repository}/#{name}"
-
-    request registry, (error, response, uri) ->
-      if error then throw error
-
-      if link
-      
-        console.log "Install #{name} from: #{uri}"
-        bower.link(name, name, save: true)
-          .on 'end', (results) ->
-            sync()
-          #
-          # https://github.com/nodejs/node/issues/18518
-          # fs.symlink can’t create directory symlinks on Windows #18518
-          # "The libuv upgrade will make its way into node 8 eventually.
-          # Since there is nothing to do but wait I'll go ahead and close this out."
-          #
-
-      else
-
-        console.log "Install from: #{uri}"
-        bower.install(["#{name}=#{uri}"], save: true)
-          .on 'end', (results) ->
-            sync()
-
+    sync()
 
   return
 

@@ -17,7 +17,7 @@ liquid.Template.registerFilter do (filter = ->) ->
   filter.ucfirst  = (str) -> str.charAt(0).toUpperCase() + str.substr(1)
   filter.camel    = (str) -> str.charAt(0).toLowerCase() + str.substr(1)
   filter.nosrc    = (str) -> str.replace(/^src\//, "")
-  filter
+  return filter
 
 #
 # gets the source location of the template
@@ -34,7 +34,7 @@ getSrc = (data) ->
 #
 render = (template, data) ->
   xform = liquid.Template.parse(fs.readFileSync(path.join(getSrc(data), template), 'utf8'))
-  xform.render(data)
+  return xform.render(data)
 
 #
 # get folders
@@ -48,7 +48,7 @@ getFolders = (folders, files...) ->
   for ary in files
     for name in ary
       unique[path.dirname(name)] = true
-  Object.keys(unique)
+  return Object.keys(unique)
 
 #
 # clean up file path name
@@ -61,27 +61,83 @@ clean = (file) ->
   return file
 
 #
+# make sure the metadata format is up to date
+# patch in fields that have been added since v0
+# or that are not in bower
+upgrade = (project) ->
+
+  if not project.vala?
+    project.vala = "0.26"
+
+  if not project.packages?
+    project.packages = null
+
+  if not project.includes?
+    project.includes = null
+
+  if not project.libraries?
+    project.libraries = null
+
+  if not project.options?
+    project.options = null
+
+  if not project.definitions?
+    project.definitions = null
+
+  if not project.copy?
+    project.copy = null
+
+  if not project.vapidir?
+    project.vapidir = null
+
+  if not project.console?
+    project.console = false
+
+  if project.template is "package" and not project.main?
+    project.main = "CMakeLists.txt"
+
+  return project
+#
 # Sync metadata and CMake to reflect the current state of the project
 #
 sync = () ->
   exec "bower list --path --json", (error, stdout, stderr) ->
     if error then throw error
-      
     project = require(path.join(process.cwd(), 'component.json'))
+    project = upgrade(project)
+
     srcPath = project.source ? 'src'
     libs = JSON.parse(stdout)
     fs.recursiveReaddir path.join(process.cwd(), srcPath), (error, files) ->
       if error then throw error
       project = require(path.join(process.cwd(), 'component.json'))
+
       project.files = []
-      project.files.push clean(file) for file in files when ".gs.vala".indexOf(path.extname(file)) != -1
+      project.files.push clean(file) for file in files when ".gs.vala.c.vapi".indexOf(path.extname(file)) != -1
       fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
       
+      
+      project.files = []
+      project.files.push clean(file) for file in files when ".gs.vala".indexOf(path.extname(file)) != -1
+      if project.files.length is 0 then project.files = null
+
+      project.c_source = []
+      project.c_source.push clean(file) for file in files when ".c".indexOf(path.extname(file)) != -1
+      if project.c_source.length is 0 then project.c_source = null
+
+      project.vapi_files = []
+      project.vapi_files.push clean(file) for file in files when ".vapi".indexOf(path.extname(file)) != -1
+      if project.vapi_files.length is 0 then project.vapi_files = null
+
       project.installed = []
       project.installed.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
+      for lib in project.installed
+        if fs.existsSync("#{lib}/component.json")
+          doran = require(path.join(process.cwd(), "#{lib}/component.json"))
+          project.definitions = [] if project.definitions is null
+          project.definitions.push d for d in doran.definitions
+      
       fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt.liquid', project)
-
-
 
 
 module.exports =

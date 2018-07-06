@@ -1,0 +1,34 @@
+cmake_minimum_required ( VERSION 3.1 )
+###################################################################################
+#
+#   Library: {{ name }}
+#
+###################################################################################
+project ( {{ name }} VERSION {{ version }} )
+
+# Includes: {% for folder in includes %}
+list ( APPEND INCLUDE {{ folder }} ){% endfor %}
+
+# C Sources: {% for file in c_source %}
+list ( APPEND CSOURCE .lib/{{ name }}/{{ file }} ){% endfor %}
+
+# Vala Sources: {% for file in files %}
+list ( APPEND SOURCE .lib/{{ name }}/{{ file }} ){% endfor %}
+
+# Vapis: {% for file in vapi_files %}
+list ( APPEND VAPI .lib/{{ name }}/{{ file }} ){% endfor %}
+
+# Vapidir: {% if vapidir != null %}
+list ( APPEND VALA_OPTION --vapidir=${CMAKE_SOURCE_DIR}/.lib/{{ name }}/{{ vapidir }}){% endif %}
+
+## Export to the parent scope:
+set ( {{ name | upcase }} true PARENT_SCOPE )
+{% if includes != null %}set ( INCLUDES "${INCLUDES};${INCLUDE}" PARENT_SCOPE ){% endif %}
+{% if c_source != null %}set ( C_SOURCES "${C_SOURCES};${CSOURCE}" PARENT_SCOPE ){% endif %}
+{% if files != null %}set ( VALA_SOURCES "${VALA_SOURCES};${SOURCE}" PARENT_SCOPE ){% endif %}
+{% if vapi_files != null %}set ( CUSTOM_VAPIS "${CUSTOM_VAPIS};${VAPI}" PARENT_SCOPE ){% endif %}
+{% if vapidir != null %}set ( VALAC_OPTIONS "${VALAC_OPTIONS};${VALA_OPTION}" PARENT_SCOPE ){% endif %}
+{% if libraries != null %}set ( DEPS_LIBRARIES "${DEPS_LIBRARIES};{% for lib in libraries %}-l{{ lib }}{% if forloop.last != true %} {% endif %}{% endfor %}" PARENT_SCOPE){% endif %}
+
+
+# (generated from template: {{ template}}. Do not modify. )

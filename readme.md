@@ -59,9 +59,11 @@ At this point, doran is experimental, and is just used to package my own project
     files
         files in src folder (maintained by doran)
     packages
-        pkg-config dependencies (maintained by doran)
+        pkg-config dependencies
     libraries
         other libraries
+    includes
+        folders with *.h files
     options
         valac options
     definitions
@@ -72,6 +74,4 @@ At this point, doran is experimental, and is just used to package my own project
         local vapi folder
     console
         false for windowed applications
-    [installed]
-        virtual array of installed source dependencies
 
