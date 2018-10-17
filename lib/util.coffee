@@ -84,6 +84,9 @@ upgrade = (project) ->
   if not project.definitions?
     project.definitions = null
 
+  if not project.symbols?
+    project.symbols = null
+
   if not project.copy?
     project.copy = null
 
@@ -113,7 +116,7 @@ sync = () ->
       project = require(path.join(process.cwd(), 'component.json'))
 
       project.files = []
-      project.files.push clean(file) for file in files when ".gs.vala.c.vapi".indexOf(path.extname(file)) != -1
+      project.files.push clean(file) for file in files when ".gs.vala.c.cpp.vapi".indexOf(path.extname(file)) != -1
       fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
       
       
@@ -122,7 +125,7 @@ sync = () ->
       if project.files.length is 0 then project.files = null
 
       project.c_source = []
-      project.c_source.push clean(file) for file in files when ".c".indexOf(path.extname(file)) != -1
+      project.c_source.push clean(file) for file in files when ".c.cpp".indexOf(path.extname(file)) != -1
       if project.c_source.length is 0 then project.c_source = null
 
       project.vapi_files = []

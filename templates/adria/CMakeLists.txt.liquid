@@ -59,7 +59,8 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 #   compiler options
 #
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental ){% if vapidir != '' %}
-list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}{{ vapidir }}){% endif %}
+list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}{{ vapidir }}){% endif %}{% for symbol in symbols %}
+list ( APPEND VALAC_OPTIONS --define {{ symbol }} ){% endfor %}
 
 {% if console != true %}if (WIN32)  
     set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )

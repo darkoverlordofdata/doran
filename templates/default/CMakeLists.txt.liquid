@@ -39,7 +39,13 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} ){% for file in files %}
-list ( APPEND VALA_SOURCES {{ file }} ){% endfor %}
+list ( APPEND VALA_SOURCES {{ file }} ){% endfor %}{% for file in c_source %}
+list ( APPEND C_SOURCES {{ file }} ){% endfor %}
+#
+#   application includes
+#{% for folder in includes %}
+set ( INCLUDES "${INCLUDES};{{ folder }}" ){% endfor %}
+
 #
 #   pkg-config dependencies
 #{% for pkg in packages %}
@@ -55,8 +61,13 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 #   compiler options
 #
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental ){% if vapidir != '' %}
-list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}{{ vapidir }}){% endif %}
+list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}{{ vapidir }}){% endif %}{% for symbol in symbols %}
+list ( APPEND VALAC_OPTIONS --define {{ symbol }} ){% endfor %}
 
+# Vapis: {% for file in vapi_files %}
+set ( CUSTOM_VAPIS "${CUSTOM_VAPIS};{{ file }}" ){% endfor %}
+# Libs: {% for lib in libraries %}
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -l{{ lib }}" ){% endfor %}
 {% if console = true %}if (WIN32)  
     set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )
 endif (){% endif %}

@@ -68,6 +68,7 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
       RELEASE_NAME  : projectName 
     },
     definitions     : [],
+    symbols         : [],
     copy            : null,
     vapidir         : (if projectTemplate == 'package' then "vapis" else "/src/vapis"),
     console         : false
