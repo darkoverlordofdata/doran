@@ -43,6 +43,7 @@ copyTemplates = (tmpPath, newPath, data) ->
 init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
 
   project = {
+    "!": "doran package manager v"+require("#{path.dirname(__dirname)}/package.json").version,
     name            : projectName,
     template        : projectTemplate,
     version         : "0.0.1",
