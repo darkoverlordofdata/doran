@@ -29,6 +29,8 @@ Doran recognizes 2 package types, default and package. Default is a top level pr
 
 Project templates are Liquid templates. If you've used Jekyll, chances are you've used Liquid. Template values are pulled from the project component.json. The json node "files" is maintained by scanning "source" during update. The "dependencies" node is maintained by doran install. The remaining nodes are initialized by doran init, and them maintained by the developer. 
 
+Run doran update when any changes are made to the project - this will re-write the CMakeFiles.txt for the project or package.
+
 For an example of most doran features, look at https://github.com/darkoverlordofdata/valagame
 
 #### start a new project
@@ -59,7 +61,9 @@ For an example of most doran features, look at https://github.com/darkoverlordof
     doran install mysub
 
 #### link package to project
-    cd myproject
+    cd mysub
+    bower link
+    cd ../myproject
     doran install mysub
     del ./.lib/mysub
     doran install --link mysub
