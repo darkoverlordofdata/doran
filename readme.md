@@ -27,6 +27,10 @@
 ## Overview
 Doran recognizes 2 package types, default and package. Default is a top level project containing the main proc. Packages are source libraries, and compiled as sub-projects to the default project. All projects can be a mixture of Vala, C, and C++.
 
+Project templates are Liquid templates. If you've used Jekyll, chances are you've used Liquid. Template values are pulled from the project component.json. The json node "files" is maintained by scanning "source" during update. The "dependencies" node is maintained by doran install. The remaining nodes are initialized by doran init, and them maintained by the developer. 
+
+For an example of most doran features, look at https://github.com/darkoverlordofdata/valagame
+
 #### start a new project
     doran init myproject
     cd myproject
