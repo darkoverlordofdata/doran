@@ -1,6 +1,6 @@
 {
   "name": "doran-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "vala package manager",
   "main": "index.js",
   "bin": {

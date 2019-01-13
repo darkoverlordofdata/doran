@@ -107,7 +107,7 @@ For an example of most doran features, look at https://github.com/darkoverlordof
     console
         false for windowed applications
     symbols
-        symbols to define for valac
+        symbols to define for valac / flags for c
 
 ## Why?
 Autovala is like the best thing ever. But it doesn't work on windows, and it's depencencies and scope make it unlikely that it ever will. Doran runs on both windows
