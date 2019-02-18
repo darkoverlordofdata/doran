@@ -68,6 +68,9 @@ For an example of most doran features, look at https://github.com/darkoverlordof
     del ./.lib/mysub
     doran install --link mysub
 
+### supported platforms
+    Works on Windows10, Fedora 28, Ubuntu 18.04, Rasbian Stretch on rpi3
+
 ## component.json
     name
         project name
