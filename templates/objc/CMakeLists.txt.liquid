@@ -1,0 +1,76 @@
+cmake_minimum_required ( VERSION 3.1 )
+###################################################################################
+#
+#   Build {{ name }}
+#
+###################################################################################
+project ( {{ name }} VERSION {{ version }} )
+
+#{% for option in options %}
+set ( {{ option.key }} {{ option.value }} ){% endfor %}
+
+#
+# enable features
+#
+include ( CMakeToolsHelpers OPTIONAL )
+
+#
+#   libraries - sources & packages
+#{% for doran in installed %}
+add_subdirectory ( {{ doran }} ){% endfor %}
+if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
+    add_subdirectory (data)
+    list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
+endif ()
+
+#
+#   application source
+#
+{% for file in c_source %}
+list ( APPEND C_SOURCES {{ file }} ){% endfor %}
+#
+#   application includes
+#{% for folder in includes %}
+set ( INCLUDES "${INCLUDES};{{ folder }}" ){% endfor %}
+
+
+#
+#   compiler options
+#
+# Libs: {% for lib in libraries %}
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -l{{ lib }}" ){% endfor %}
+{% for flag in symbols %}
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} {{ flag }}" ){% endfor %}
+{% if console = true %}if (WIN32)  
+    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )
+endif (){% endif %}
+
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fobjc-exceptions" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -funwind-tables" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fconstant-string-class=OFConstantString" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xclang -fno-constant-cfstrings" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xclang -fobjc-runtime=objfw" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xclang -fblocks" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -DPIC" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -L/usr/local/lib" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
+
+# definitions {% for definition in definitions %}
+add_definitions( -D{{ definition }} ) {% endfor %}
+
+include_directories(AFTER ${INCLUDES})
+
+#
+#   compile ccode & link executable
+#
+add_executable ( ${PROJECT_NAME} ${C_SOURCES} ${RESOURCES} )
+{% if copy != null %}add_custom_command(TARGET ${PROJECT_NAME} 
+                   POST_BUILD COMMAND 
+                   ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> {{ copy }} ){% endif %}
+target_link_libraries ( ${PROJECT_NAME} {% for lib in libraries %}{{ lib }} {% endfor %} )
+install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
+
+include (CPack)
+
+# (generated from template: {{ template}}. Do not modify. )

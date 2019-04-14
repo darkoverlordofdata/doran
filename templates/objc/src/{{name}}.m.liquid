@@ -1,0 +1,14 @@
+#import <ObjFW/ObjFW.h>
+
+@interface test: OFObject <OFApplicationDelegate>
+@end
+
+OF_APPLICATION_DELEGATE(test)
+
+@implementation test
+- (void)applicationDidFinishLaunching
+{
+	[of_stdout writeLine: @"Hello World!"];
+	[OFApplication terminate];
+}
+@end

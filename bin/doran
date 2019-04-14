@@ -21,6 +21,14 @@ Options:
   -k  [--link]      # link local dependancy
   -t  [--template]  # template name
   -v  [--version]   # display version
+
+Templates:
+  adria     use [Compact] classes
+  c         c project
+  default   vala project
+  objc      objective-c project (using ObjFw)
+  package   subproject
+
 """
 switch process.argv[2]
 

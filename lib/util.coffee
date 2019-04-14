@@ -116,7 +116,14 @@ sync = () ->
       project = require(path.join(process.cwd(), 'component.json'))
 
       project.files = []
-      project.files.push clean(file) for file in files when ".gs.vala.c.cpp.vapi".indexOf(path.extname(file)) != -1
+      project.files.push clean(file) for file in files when ".m.gs.vala.c.cpp.vapi".indexOf(path.extname(file)) != -1
+      # ObjFw support:
+      if project.template is 'objc'
+        if project.libraries.indexOf('objfw') is -1     then project.libraries.push('objfw')
+        if project.libraries.indexOf('objfw_rt') is -1  then project.libraries.push('objfw_rt')
+        if project.libraries.indexOf('dl') is -1        then project.libraries.push('dl')
+        if project.libraries.indexOf('pthread') is -1   then project.libraries.push('pthread')
+
       fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
       
       
@@ -125,7 +132,7 @@ sync = () ->
       if project.files.length is 0 then project.files = null
 
       project.c_source = []
-      project.c_source.push clean(file) for file in files when ".c.cpp".indexOf(path.extname(file)) != -1
+      project.c_source.push clean(file) for file in files when ".c.cpp.m".indexOf(path.extname(file)) != -1
       if project.c_source.length is 0 then project.c_source = null
 
       project.vapi_files = []
