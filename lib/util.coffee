@@ -121,7 +121,7 @@ sync = () ->
       if project.template is 'objc'
         if project.libraries.indexOf('objfw') is -1     then project.libraries.push('objfw')
         if project.libraries.indexOf('objfw_rt') is -1  then project.libraries.push('objfw_rt')
-        if project.libraries.indexOf('dl') is -1        then project.libraries.push('dl')
+        # if project.libraries.indexOf('dl') is -1        then project.libraries.push('dl')
         if project.libraries.indexOf('pthread') is -1   then project.libraries.push('pthread')
 
       fs.writeFileSync path.join(process.cwd(), 'component.json'), JSON.stringify(project, null, '  ')
