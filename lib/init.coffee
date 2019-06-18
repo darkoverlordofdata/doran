@@ -48,6 +48,8 @@ init = (projectName, projectTemplate = 'default', srcPath = 'src') ->
     template        : projectTemplate,
     version         : "0.0.1",
     vala            : "0.26",
+    c               : "99",
+    cpp             : "17",
     authors         : [ ],
     description     : projectName,
     license         : "MIT",

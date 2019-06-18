@@ -69,6 +69,12 @@ upgrade = (project) ->
   if not project.vala?
     project.vala = "0.26"
 
+  if not project.c?
+    project.vala = "99"
+
+  if not project.cpp?
+    project.vala = "17"
+
   if not project.packages?
     project.packages = null
 
