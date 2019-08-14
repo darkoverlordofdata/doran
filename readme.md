@@ -9,6 +9,7 @@
 
     yarn global add doran-cli
 
+    yarn global add /home/darkoverlordofdata/Documents/GitHub/doran
 
 ## Usage
 
@@ -99,6 +100,8 @@ For an example of most doran features, look at https://github.com/darkoverlordof
         other libraries
     includes
         folders with *.h files
+    links
+        project local -L libs
     options
         valac options
     definitions

@@ -81,6 +81,9 @@ upgrade = (project) ->
   if not project.includes?
     project.includes = null
 
+  if not project.links
+    project.links = null
+
   if not project.libraries?
     project.libraries = null
 
