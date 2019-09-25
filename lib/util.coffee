@@ -70,10 +70,10 @@ upgrade = (project) ->
     project.vala = "0.26"
 
   if not project.c?
-    project.vala = "99"
+    project.c = "99"
 
   if not project.cpp?
-    project.vala = "17"
+    project.cpp = "17"
 
   if not project.packages?
     project.packages = null
@@ -149,12 +149,16 @@ sync = () ->
       if project.vapi_files.length is 0 then project.vapi_files = null
 
       project.installed = []
-      project.installed.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
+      for name, lib of libs
+        if fs.existsSync("#{lib.replace('/CMakeLists.txt', '')}/component.json")
+          project.installed.push lib.replace('/CMakeLists.txt', '')
+
+      # project.installed.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
       for lib in project.installed
-        if fs.existsSync("#{lib}/component.json")
-          doran = require(path.join(process.cwd(), "#{lib}/component.json"))
-          project.definitions = [] if project.definitions is null
-          project.definitions.push d for d in doran.definitions
+        # if fs.existsSync("#{lib}/component.json")
+        doran = require(path.join(process.cwd(), "#{lib}/component.json"))
+        project.definitions = [] if project.definitions is null
+        project.definitions.push d for d in doran.definitions
       
       fs.writeFileSync path.join(process.cwd(), 'CMakeLists.txt'), render('CMakeLists.txt.liquid', project)
 
