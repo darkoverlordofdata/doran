@@ -72,8 +72,14 @@ upgrade = (project) ->
   if not project.c?
     project.c = "99"
 
+  if not project.cflags?
+    project.cflags = ""
+
   if not project.cpp?
     project.cpp = "17"
+
+  if not project.cppflags?
+    project.cppflags = ""
 
   if not project.packages?
     project.packages = null
@@ -153,9 +159,7 @@ sync = () ->
         if fs.existsSync("#{lib.replace('/CMakeLists.txt', '')}/component.json")
           project.installed.push lib.replace('/CMakeLists.txt', '')
 
-      # project.installed.push lib.replace('/CMakeLists.txt', '') for name, lib of libs
       for lib in project.installed
-        # if fs.existsSync("#{lib}/component.json")
         doran = require(path.join(process.cwd(), "#{lib}/component.json"))
         project.definitions = [] if project.definitions is null
         project.definitions.push d for d in doran.definitions

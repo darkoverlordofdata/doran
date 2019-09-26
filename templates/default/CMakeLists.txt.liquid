@@ -71,7 +71,8 @@ set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -l{{ lib }}" ){% endfor %}
 {% if console = true %}if (WIN32)  
     set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )
 endif (){% endif %}
-set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} {{ cflags }}" )
+set ( CMAKE_CXX_FLAGS "${CMAKE_XX_FLAGS} {{ cppflags }}" )
 
 # definitions {% for definition in definitions %}
 add_definitions( -D{{ definition }} ) {% endfor %}
